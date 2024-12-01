@@ -3,7 +3,7 @@ import pool from '../config/database.js';
 // Obtener todos los usuarios
 export async function getAllUsers(req, res) {
   try {
-    const [rows] = await pool.query('SELECT * FROM users');
+    const [rows] = await pool.query('SELECT * FROM usuarios');
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -12,17 +12,20 @@ export async function getAllUsers(req, res) {
 
 // Registrar usuario
 export async function registerUser(req, res) {
-  const { nombre, correo, contrasena } = req.body;
+  console.log(req.body); // Verifica que req.body contiene los datos esperados
+  const { nombre, correo, contrasena } = req.body; // Desestructurando las propiedades
   try {
     const [result] = await pool.query(
-      'INSERT INTO usuarios (nombre, correo, contrasena) VALUES (?, ?, ?)',
+      'INSERT INTO usuarios (nombre, correo, contrasena) VALUES (?, ?, ?)', // Corregido correo en lugar de email
       [nombre, correo, contrasena]
     );
     res.status(201).json({ message: 'Usuario registrado exitosamente', userId: result.insertId });
   } catch (error) {
+    console.error(error); // Imprime el error en consola para depuración
     res.status(500).json({ error: 'Error al registrar el usuario' });
   }
 };
+
 // Iniciar sesión
 export async function loginUser(req, res) {
   const { correo, contrasena } = req.body;
@@ -48,18 +51,18 @@ export async function logoutUser(req, res) {
 export async function updateUser(req, res) {
   try {
     const { id } = req.params;
-    const { name, email } = req.body;
+    const { name, correo } = req.body;
 
     const [result] = await pool.query(
-      'UPDATE users SET name = ?, email = ? WHERE id = ?',
-      [name, email, id]
+      'UPDATE usuarios SET name = ?, correo = ? WHERE id = ?',
+      [name, correo, id]
     );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    res.json({ message: 'Usuario actualizado correctamente', id, name, email });
+    res.json({ message: 'Usuario actualizado correctamente', id, name, email: correo });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -70,7 +73,7 @@ export async function deleteUser(req, res) {
   try {
     const { id } = req.params;
 
-    const [result] = await pool.query('DELETE FROM users WHERE id = ?', [id]);
+    const [result] = await pool.query('DELETE FROM usuarios WHERE id = ?', [id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Usuario no encontrado' });

@@ -12,7 +12,7 @@ import { validateEmails } from '../middlewares/validateEmail.js';
 const router = express.Router();
 
 router.get('/user', getAllUsers);        // Obtener todos los usuarios
-router.post('/user/register', registerUser);
+router.post('/user/register', validateEmails,registerUser);
 router.post('/user/login', loginUser);
 router.post('/user/logout', logoutUser);
 router.put('/user/:id',validateEmails, updateUser);      // Actualizar un usuario por ID
