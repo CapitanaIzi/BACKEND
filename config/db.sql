@@ -1,9 +1,13 @@
 CREATE IF NOT EXISTS tienda;
 
-USE tienda;
+CREATE DATABASE app_iziel;
+USE app_iziel;
 
-CREATE TABLE users (
+CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    contrasena VARCHAR(100) NOT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+SELECT * FROM usuarios;

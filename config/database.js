@@ -14,6 +14,12 @@ const pool = createPool({
 });
 
 console.log(process.env.DB_PORT?"true":"false");
-
+pool.getConnection()
+  .then(() => {
+      console.log("Conexión a la base de datos exitosa");
+  })
+  .catch((err) => {
+      console.error("Error de conexión a la base de datos: ", err);
+  });
 
 export default pool;
