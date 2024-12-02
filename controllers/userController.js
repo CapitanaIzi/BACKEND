@@ -38,7 +38,7 @@ export async function loginUser(req, res) {
     if (usuario.contrasena !== contrasena) {
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
-    res.status(200).json({ message: 'Inicio de sesión exitoso', usuario });
+    res.status(200).json({ message: 'Inicio de sesión exitoso', nombre: usuario.nombre });
   } catch (error) {
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }
