@@ -1,11 +1,11 @@
-import db from '../config/db.js';  // Importa la conexión a la base de datos
+import pool from '../config/database.js';  // Importa la conexión a la base de datos
 
 // Crear una nueva lista
-export const crearLista = async (req, res) => {
+const crearLista = async (req, res) => {
   try {
     const { titulo, tipo, idUsuario } = req.body;
 
-    const [result] = await db.execute(
+    const [result] = await pool.execute(
       'INSERT INTO listas (titulo, tipo, idUsuario) VALUES (?, ?, ?)',
       [titulo, tipo, idUsuario]
     );
@@ -18,11 +18,11 @@ export const crearLista = async (req, res) => {
 };
 
 // Obtener todas las listas de un usuario
-export const obtenerListas = async (req, res) => {
+const obtenerListas = async (req, res) => {
   try {
     const { idUsuario } = req.params;
 
-    const [listas] = await db.execute('SELECT * FROM listas WHERE idUsuario = ?', [idUsuario]);
+    const [listas] = await pool.execute('SELECT * FROM listas WHERE idUsuario = ?', [idUsuario]);
     res.status(200).json(listas);
   } catch (error) {
     console.error(error);
@@ -31,12 +31,12 @@ export const obtenerListas = async (req, res) => {
 };
 
 // Agregar una tarea a una lista
-export const agregarTarea = async (req, res) => {
+const agregarTarea = async (req, res) => {
   try {
     const { idLista } = req.params;
     const { contenido } = req.body;
 
-    const [result] = await db.execute(
+    const [result] = await pool.execute(
       'INSERT INTO tareas (contenido, idLista) VALUES (?, ?)',
       [contenido, idLista]
     );
@@ -49,11 +49,11 @@ export const agregarTarea = async (req, res) => {
 };
 
 // Marcar una tarea como completada
-export const marcarTarea = async (req, res) => {
+const marcarTarea = async (req, res) => {
   try {
     const { idLista, idTarea } = req.params;
 
-    const [result] = await db.execute(
+    const [result] = await pool.execute(
       'UPDATE tareas SET estado = NOT estado WHERE id = ? AND idLista = ?',
       [idTarea, idLista]
     );
@@ -68,3 +68,9 @@ export const marcarTarea = async (req, res) => {
     res.status(500).json({ message: 'Error al marcar la tarea' });
   }
 };
+export default {
+  crearLista,
+  obtenerListas,
+  agregarTarea,
+  marcarTarea
+}
